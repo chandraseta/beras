@@ -217,11 +217,11 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         int rows = (int) sizeRgba.height;
         int cols = (int) sizeRgba.width;
 
-        int left = cols / 8;
-        int top = rows / 8;
+        int left = 0;
+        int top = 0;
 
-        int width = cols * 3 / 4;
-        int height = rows * 3 / 4;
+        int width = cols;
+        int height = rows;
 
         switch (MainActivity.viewMode) {
             case MainActivity.VIEW_MODE_RGBA:
@@ -310,11 +310,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 break;
 
             case MainActivity.VIEW_MODE_POSTERIZE:
-            /*
-            Imgproc.cvtColor(rgbaInnerWindow, mIntermediateMat, Imgproc.COLOR_RGBA2RGB);
-            Imgproc.pyrMeanShiftFiltering(mIntermediateMat, mIntermediateMat, 5, 50);
-            Imgproc.cvtColor(mIntermediateMat, rgbaInnerWindow, Imgproc.COLOR_RGB2RGBA);
-            */
                 rgbaInnerWindow = rgba.submat(top, top + height, left, left + width);
                 Imgproc.Canny(rgbaInnerWindow, mIntermediateMat, 80, 90);
                 rgbaInnerWindow.setTo(new Scalar(0, 0, 0, 255), mIntermediateMat);
