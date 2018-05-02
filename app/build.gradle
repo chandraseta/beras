@@ -2,9 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
+    buildToolsVersion "26.0.1"
     defaultConfig {
-        applicationId "org.beyang.beras"
-        minSdkVersion 24
+        applicationId "com.openxv.beras"
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -16,31 +17,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'x86', 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'mips', 'mips64', 'x86_64'
-            universalApk true
-        }
-    }
-    project.ext.versionCodes = ['armeabi': 1, 'armeabi-v7a': 2, 'arm64-v8a': 3, 'mips': 5, 'mips64': 6, 'x86': 8, 'x86_64': 9]
-
-    android.applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            output.versionCodeOverride =
-                    project.ext.versionCodes.get(output.getFilter(
-                            com.android.build.OutputFile.ABI), 0) * 10000000 + android.defaultConfig.versionCode
-        }
-    }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:25.4.+'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:0.5'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
-    implementation project(':openCVLibrary341')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    testCompile 'junit:junit:4.12'
 }
