@@ -29,7 +29,8 @@ public class ResultActivity extends AppCompatActivity {
         selectedImage = (ImageView) findViewById(R.id.selected_image);
         Glide.with(this).load(selectedPath).into(selectedImage);
 
-        classifyImage();
+        statusText.setText(new File(selectedPath).getName());
+        //classifyImage();
     }
 
     public void classifyImage() {
@@ -37,12 +38,12 @@ public class ResultActivity extends AppCompatActivity {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected()) {
-            statusText.setText("Classifying...");
+            statusText.setText("Mengklasifikasikan");
 
             ImageSender imageSender = new ImageSender(statusText);
             imageSender.execute(selectedPath);
         } else {
-            statusText.setText("No Internet Connection");
+            statusText.setText("Tidak Ada Koneksi");
         }
 
     }
