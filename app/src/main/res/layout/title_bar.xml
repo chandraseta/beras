@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true" >
+
+    <Button
+        android:id="@+id/camera_button"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/camera_icon"
+        android:layout_alignParentStart="true"
+        android:background="@android:color/transparent"
+        android:paddingStart="12dp"
+        />
+    <TextView
+        android:id="@+id/app_title"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Beras"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBaseline="@id/camera_button"
+        />
+    <Button
+        android:layout_alignParentEnd="true"
+        android:id="@+id/send_button"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:text="send"
+        android:background="@android:color/transparent"
+        />
+</RelativeLayout>

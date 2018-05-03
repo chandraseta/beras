@@ -10,6 +10,8 @@ import android.widget.ImageView;
  */
 
 public class SquareImageView extends android.support.v7.widget.AppCompatImageView {
+    public boolean squareSize = true;
+
     public SquareImageView(Context context) {
         super(context);
     }
@@ -29,7 +31,7 @@ public class SquareImageView extends android.support.v7.widget.AppCompatImageVie
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
 
-        if (width != height) {
+        if (width != height && squareSize) {
             setMeasuredDimension(width, width);
         }
     }

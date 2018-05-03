@@ -3,6 +3,7 @@ package com.openxv.beras;
 import android.content.Context;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,21 +11,25 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 
+import com.bumptech.glide.Glide;
+
 /**
  * Created by VincentH on 5/2/2018.
  */
 
 class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
-    private String[] mData = new String[0];
+    private String[] mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private Context mContext;
 
     /**
      * Konstruktur adapter untuk recyclerview
      * @param context
      */
     ImageAdapter(Context context, String[] data) {
-        this.mInflater = LayoutInflater.from(context);
+        mContext = context;
+        mInflater = LayoutInflater.from(context);
         mData = data;
     }
 
@@ -36,7 +41,8 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData[position];
+        String path = mData[position];
+        Glide.with(mContext).load(path).into(holder.image);
     }
 
     @Override

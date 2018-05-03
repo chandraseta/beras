@@ -10,13 +10,13 @@
         android:id="@+id/selected_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/colorBG"/>
+        android:background="@color/colorBG"
+        android:paddingBottom="1dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/image_grid"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp">
+        android:layout_height="fill_parent">
     </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
