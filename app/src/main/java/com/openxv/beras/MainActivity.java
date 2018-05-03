@@ -9,20 +9,15 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.content.ContentValues;
 
 import com.bumptech.glide.Glide;
 
@@ -39,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public View selectedView = null;
     public String selectedImagePath = null;
     private static String TIME_STAMP="null";
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,15 +67,17 @@ public class MainActivity extends AppCompatActivity {
                     if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
                         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 797);
                     }
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Images.Media.TITLE, "Picture");
+                    values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+
+                    imageUri = getContentResolver().insert( MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                     Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(intent, 1);
-                    }
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                    startActivityForResult(intent, 1);
                 }
             }
         });
-
-        selectedImage = (ImageView) findViewById(R.id.selected_image);
 
         // Load Image Grid
         imageGrid = (RecyclerView) findViewById(R.id.image_grid);
@@ -99,27 +97,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         imageGrid.setAdapter(adapter);
+
+        selectedImage = (ImageView) findViewById(R.id.selected_image);
+        selectedImagePath = adapter.getItem(0);
+        Glide.with(getApplicationContext()).load(selectedImagePath).into(selectedImage);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-
-            // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-            Uri tempUri = getImageUri(getApplicationContext(), photo);
-
             Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
-            intent.putExtra("image", getRealPathFromURI(tempUri));
+            intent.putExtra("image", getRealPathFromURI(imageUri));
             startActivity(intent);
         }
-    }
-
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
     }
 
     public String getRealPathFromURI(Uri uri) {
