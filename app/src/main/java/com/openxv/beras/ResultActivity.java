@@ -14,6 +14,9 @@ import com.bumptech.glide.Glide;
 import java.io.File;
 
 public class ResultActivity extends AppCompatActivity {
+    private final static String MSG_CLASSIFYING = "Mengklasifikasikan...";
+    private final static String MSG_NO_CONN = "Tidak ada koneksi Internet";
+
     private String selectedPath;
     private ImageView selectedImage;
     private TextView statusText;
@@ -30,21 +33,23 @@ public class ResultActivity extends AppCompatActivity {
         Glide.with(this).load(selectedPath).into(selectedImage);
 
         statusText.setText(new File(selectedPath).getName());
-        //classifyImage();
+        classifyImage();
     }
 
     public void classifyImage() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        NetworkInfo networkInfo = null;
+        if (connMgr != null) {
+            networkInfo = connMgr.getActiveNetworkInfo();
+        }
 
         if (networkInfo != null && networkInfo.isConnected()) {
-            statusText.setText("Mengklasifikasikan");
+            statusText.setText(MSG_CLASSIFYING);
 
             ImageSender imageSender = new ImageSender(statusText);
             imageSender.execute(selectedPath);
         } else {
-            statusText.setText("Tidak Ada Koneksi");
+            statusText.setText(MSG_NO_CONN);
         }
-
     }
 }

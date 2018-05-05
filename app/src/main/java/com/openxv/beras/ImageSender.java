@@ -3,7 +3,6 @@ package com.openxv.beras;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -17,7 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ImageSender extends AsyncTask<String, Void, String> {
-    private final static String API_URL = "https://beras-server.herokuapp.com/predict";
+    private final static String API_URL = "https://beras-server.herokuapp.com/predict/";
     private final static String MSG_SUCCESS = "Tipe Beras: ";
     private final static String MSG_FAILURE = "Gagal menentukan tipe beras";
     private final static String MSG_ERROR = "Terjadi kesalahan pada server";
@@ -30,7 +29,7 @@ public class ImageSender extends AsyncTask<String, Void, String> {
         this.resultText = resultText;
     }
 
-    private static String sendImage(String path) {
+    private String sendImage(String path) {
         String result = null;
         HttpURLConnection connection = null;
         BufferedReader response = null;
@@ -53,8 +52,7 @@ public class ImageSender extends AsyncTask<String, Void, String> {
             DataOutputStream request = new DataOutputStream(connection.getOutputStream());
 
             request.writeBytes(twoHyphens + boundary + crlf);
-            request.writeBytes("Content-Disposition: form-data; name=\"" +
-                    fileName + "\";filename=\"" +
+            request.writeBytes("Content-Disposition: form-data; name=\"file\";filename=\"" +
                     fileName + "\"" + crlf);
             request.writeBytes(crlf);
             request.write(bytes);
@@ -74,8 +72,8 @@ public class ImageSender extends AsyncTask<String, Void, String> {
                 return null;
             }
             result = buffer.toString();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -101,11 +99,11 @@ public class ImageSender extends AsyncTask<String, Void, String> {
                 String kelas = jsonResult.getString("class");
                 resultText.setText(String.format("%s%s", MSG_SUCCESS, kelas));
             } else {
-                resultText.setText(MSG_FAILURE);
+                String msg = jsonResult.getString("message");
+                resultText.setText(msg);
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             resultText.setText(MSG_ERROR);
-            e.printStackTrace();
         }
     }
 
