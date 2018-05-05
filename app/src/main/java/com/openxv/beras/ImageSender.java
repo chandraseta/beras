@@ -1,5 +1,6 @@
 package com.openxv.beras;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
@@ -15,6 +16,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import me.echodev.resizer.Resizer;
+
 public class ImageSender extends AsyncTask<String, Void, String> {
     private final static String API_URL = "https://beras-server.herokuapp.com/predict/";
     private final static String MSG_SUCCESS = "Tipe Beras: ";
@@ -23,9 +26,12 @@ public class ImageSender extends AsyncTask<String, Void, String> {
     private final static String boundary = "*****";
     private final static String crlf = "\r\n";
     private final static String twoHyphens = "--";
+
+    private Context context;
     private TextView resultText;
 
-    public ImageSender(TextView resultText) {
+    public ImageSender(Context context, TextView resultText) {
+        this.context = context;
         this.resultText = resultText;
     }
 
@@ -43,8 +49,15 @@ public class ImageSender extends AsyncTask<String, Void, String> {
             File file = new File(path);
             String fileName = file.getName();
 
+            File resizedImage = new Resizer(context)
+                    .setTargetLength(500)
+                    .setQuality(80)
+                    .setOutputFormat("JPEG")
+                    .setSourceImage(file)
+                    .getResizedFile();
+
             byte[] bytes = new byte[(int) file.length()];
-            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(resizedImage));
             buf.read(bytes, 0, bytes.length);
             buf.close();
 

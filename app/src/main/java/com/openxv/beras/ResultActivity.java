@@ -46,7 +46,7 @@ public class ResultActivity extends AppCompatActivity {
         if (networkInfo != null && networkInfo.isConnected()) {
             statusText.setText(MSG_CLASSIFYING);
 
-            ImageSender imageSender = new ImageSender(statusText);
+            ImageSender imageSender = new ImageSender(this, statusText);
             imageSender.execute(selectedPath);
         } else {
             statusText.setText(MSG_NO_CONN);
