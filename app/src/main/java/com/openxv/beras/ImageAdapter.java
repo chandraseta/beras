@@ -1,0 +1,90 @@
+package com.openxv.beras;
+
+import android.content.Context;
+import android.support.v7.view.menu.MenuView;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
+
+import com.bumptech.glide.Glide;
+
+/**
+ * Created by VincentH on 5/2/2018.
+ */
+
+class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
+    private String[] mData;
+    private LayoutInflater mInflater;
+    private ItemClickListener mClickListener;
+    private Context mContext;
+
+    /**
+     * Konstruktur adapter untuk recyclerview
+     * @param context
+     */
+    ImageAdapter(Context context, String[] data) {
+        mContext = context;
+        mInflater = LayoutInflater.from(context);
+        mData = data;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.image_item, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        String path = mData[position];
+        Glide.with(mContext).load(path).into(holder.image);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mData.length;
+    }
+
+    String getItem(int id) {
+        return mData[id];
+    }
+
+    /**
+     * Kelas ViewHolder, clickable dengan onclicklistenernya
+     */
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView image;
+        ViewHolder(View itemView) {
+            super(itemView);
+            image = (ImageView) itemView.findViewById(R.id.image_grid_pic);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mClickListener != null) {
+                        mClickListener.onItemClick(v, getAdapterPosition());
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Memasang ClickListener untuk digunakan oleh kelas viewholder
+     * @param itemClickListener
+     */
+    void setClickListener(ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+
+    /**
+     * Interface ItemClickListener milik ImageAdapter
+     */
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
+    }
+}
